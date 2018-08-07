@@ -196,42 +196,43 @@ Media.prototype.getCurrentAmplitude = function(success, fail) {
  */
 Media.onStatus = function(id, msgType, value) {
 
-    var media = mediaObjects[id];
+     var media = mediaObjects[id];
 
-    if (media) {
-        switch(msgType) {
-            case Media.MEDIA_STATE :
-                if (media.statusCallback) {
-                    media.statusCallback(value);
-                }
-                if (value == Media.MEDIA_STOPPED) {
-                    if (media.successCallback) {
-                        media.successCallback();
-                    }
-                }
-                break;
-            case Media.MEDIA_DURATION :
-                media._duration = value;
-                break;
-            case Media.MEDIA_ERROR :
-                if (media.errorCallback) {
-                    media.errorCallback(value);
-                }
-                break;
-            case Media.MEDIA_POSITION :
-                media._position = Number(value);
-                break;
-            default :
-                if (console.error) {
-                    console.error("Unhandled Media.onStatus :: " + msgType);
-                }
-                break;
-        }
-    } else if (console.error) {
-        console.error("Received Media.onStatus callback for unknown media :: " + id);
-    }
+     if (media) {
+         switch(msgType) {
+             case Media.MEDIA_STATE :
+                 if (media.statusCallback) {
+                     media.statusCallback({key: 1, value: value});
+                 }
+                 if (value == Media.MEDIA_STOPPED) {
+                     if (media.successCallback) {
+                         media.successCallback();
+                     }
+                 }
+                 break;
+             case Media.MEDIA_DURATION :
+                 media.statusCallback({key: 2, value: value});
+                 media._duration = value;
+                 break;
+             case Media.MEDIA_ERROR :
+                 if (media.errorCallback) {
+                     media.errorCallback(value);
+                 }
+                 break;
+             case Media.MEDIA_POSITION :
+                 media._position = Number(value);
+                 break;
+             default :
+                 if (console.error) {
+                     console.error("Unhandled Media.onStatus :: " + msgType);
+                 }
+                 break;
+         }
+     } else if (console.error) {
+         console.error("Received Media.onStatus callback for unknown media :: " + id);
+     }
 
-};
+ };
 
 module.exports = Media;
 
